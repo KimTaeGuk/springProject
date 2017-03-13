@@ -8,4 +8,12 @@
  	<insert id="userInsert">
 		INSERT INTO user(userId, userPassword, userEmail, userName, userBirth, enabled) values(#{param1}, #{param2}, #{param3}, #{param4}, #{param5}, true)
 	</insert>
+	
+	<select id="userEmailSearch" resultType="java.lang.String">
+		SELECT userEmail FROM user WHERE userId=#{param1} and userName=#{param2}
+	</select>
+	
+	<update id="userpasswordUpdate">
+		UPDATE user SET userPassword=#{param3} where userId=#{param1} and userName=#{param2}
+	</update>
  </mapper>

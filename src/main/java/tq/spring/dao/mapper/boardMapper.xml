@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.2//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="tq.spring.dao.impl.boardDaoImpl">
+
+	<select id="boardMax" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM board
+	</select>
+	
+	<insert id="boardInsert">
+		INSERT INTO board(boardNum, boardId, boardSubject, boardContent, boardDate) values (#{param1}, #{param2}, #{param3}, #{param4}, NOW())
+	</insert>
+	
+	<select id="boardList" resultType="tq.spring.dto.boardDto">
+		SELECT * FROM board
+	</select>
+	
+	<select id="boardView" resultType="tq.spring.dto.boardDto">
+		SELECT * FROM board WHERE boardNum=#{param1}
+	</select>
+	
+	<update id="boardCount">
+		UPDATE board SET boardCount=boardCount+1 where boardNum=#{param1}
+	</update>
+
+</mapper>

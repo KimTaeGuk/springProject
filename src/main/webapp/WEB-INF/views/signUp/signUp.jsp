@@ -163,8 +163,8 @@
 			<td colspan="2"><input type="submit" value="전송" /></td>
 		</tr>
 	</table>
-	<!-- 암호화  -->
-	<input type="text" name="${_csrf.parameterName }" value="${_csrf.token }"/>
+	<!-- csrf -->
+	<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }"/>
 </form>
 </body>
 </html>
