@@ -1,5 +1,5 @@
-SpringProject by KimTaeGuk
-===================
+KimTaeGuk
+=========
 
 ###  Available Skills
 Languages             | Skills           |
@@ -13,7 +13,12 @@ HTML                  | HTML5            |
 Etc                   | Skills               |
 ----------------------|----------------------|
 OS                    | Linux, Unix, Windows |
-Editors               | Eclipse(STS)         | 
+Editors               | Eclipse, Sublime ... | 
+Framework             | Spring               |
+
+
+SpringProject by KimTaeGuk
+===================
 
 ### web-xml
 filter-name의 이름은 반드시 **springSecurityFilterChain**이어야 합니다.
