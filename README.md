@@ -1,5 +1,5 @@
-KimTaeGuk
-=========
+SpringProject by KimTaeGuk
+===================
 
 ###  Available Skills
 Languages             | Skills           |
@@ -17,52 +17,7 @@ Editors               | Eclipse, Sublime ... |
 Framework             | Spring               |
 
 
-SpringProject by KimTaeGuk
-===================
-
-### web-xml
-filter-name의 이름은 반드시 **springSecurityFilterChain**이어야 합니다.
-
->>  **springSecurityFilterChain**
->DelegatingFilterProxy 클래스는 setTargetBeanName(String)이라는 메서드를 갖고 있는데 이 메서드는 실제 요청을 처리할 필터를 주입받습니다. 이 클래스는 기본값으로 filter-name의 값과 동일한 빈이 스프링 컨텍스트에 존재하는지를 검색하게 됩니다. 그리고 springSecurityFilterChain은 스프링 시큐리티의 inner bean이기 때문에 자동으로 생성이 됩니다.
-
-    <filter>
-        <filter-name>springSecurityFilterChain</filter-name>
-	  	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-	  	<filter-name>springSecurityFilterChain</filter-name>
-	  	<url-pattern>/*</url-pattern>
-	</filter-mapping>
-
-
-###security-context.xml
-
-비밀번호를 bcrypt방식으로 암호화시켜줍니다.
-
-    <security:intercept-url pattern="/welcome" access="hasRole('ROLE_ADMIN')"/>	
-
-
-maven의 버전과 xml 스키마의 버전이 일치해야 합니다.
-
-    <security:authentication-manager>
-        <security:authentication-provider>
- 	    
-	    <!--암호화 참조입니다.-->
-	    <security:password-encoder ref="encoder" />
- 				
- 	    <!-- 유저 확인과 그 유저가 가지고 있는 권한을 확인합니다. --> 
- 	    <security:jdbc-user-service data-source-ref="dataSource"
-	        users-by-username-query="select userId as username, userPassword as password, enabled from user where userId=?"
-	        authorities-by-username-query="select userId as username, authority from user_auth where userId=?"
-	    />
-
-        </security:authentication-provider>
-    </security:authentication-manager>
-
-
-
-### 추가된 기능
+### 추가된 기능(v3.13)
 - 암호화된 비밀번호로 인해 비밀번호를 찾을 시 새로운 비밀번호를 이메일로 전송했습니다.
 
 **spring-mail.xml**
