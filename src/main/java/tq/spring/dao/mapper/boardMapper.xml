@@ -24,5 +24,17 @@
 	<update id="boardCount">
 		UPDATE board SET boardCount=boardCount+1 where boardNum=#{param1}
 	</update>
+	
+	<delete id="boardDelete">
+		DELETE FROM board WHERE boardNum=#{param1}
+	</delete>
+	
+	<update id="boardDelUpdateNum">
+		UPDATE board SET boardNum = boardNum - 1 where boardNum > #{param1}
+	</update>
+	
+	<update id="boardModify">
+		UPDATE board SET boardSubject=#{param2}, boardContent=#{param3} where boardNum=#{param1}
+	</update>
 
 </mapper>

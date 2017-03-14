@@ -15,7 +15,7 @@ public class boardDao implements boardDaoImpl {
 		return 0;
 	}
 	@Override
-	public void boardDelete() {
+	public void boardDelete(Integer boardNum) {
 	// TODO Auto-generated method stub
 		
 	}
@@ -41,6 +41,18 @@ public class boardDao implements boardDaoImpl {
 	}
 	@Override
 	public void boardCount(Integer boardNum) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void boardDelUpdateNum(Integer boardNum) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void boardModify(Integer boardNum, String boardSubject, String boardContent) {
 		// TODO Auto-generated method stub
 		
 	}

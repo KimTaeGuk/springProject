@@ -6,10 +6,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script
+  src="https://code.jquery.com/jquery-3.1.1.js"
+  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script>
 </head>
 <body>
 <h1>게시판 뷰 페이지입니다.</h1>
-
+<a href="boardDelete?boardNum=${boardView.boardNum }">글 삭제</a>
+<a href="boardModify?boardNum=${boardView.boardNum }">글 수정</a>
 <table border="1">
 	<tr>
 		<th>boardNum</th>
@@ -28,5 +33,34 @@
 		<td>${boardView.boardCount }</td>
 	</tr>
 </table>
+
+<form action="commentInsert" method="POST">
+	<input type="hidden" value="${userId }" name="commentId"/>
+	<input type="hidden" value="${boardView.boardNum }" name="boardNum"/>
+	<textarea name="commentContent"></textarea>
+	<input type="submit" value="전송"/>
+</form>
+
+
+<button onclick="commentList(${boardView.boardNum});">댓글 보기</button>
+<!-- 댓글 -->
+<div id="comment"></div>
+
+<script>
+	function commentList(boardNum){
+		$.ajax({
+			type:"GET",
+			url:"commentList?boardNum="+boardNum,
+			//data:$('form').serialize()
+			data:{
+				
+			},
+			dataType:"html",
+			success:function(data){
+				$("#comment").html(data);
+			}
+		});
+	}
+</script>
 </body>
 </html>

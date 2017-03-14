@@ -16,7 +16,10 @@ public interface boardDaoImpl {
 	public void boardInsert(int boardNum, String boardId, String boardSubject, String boardContent);
 	
 	//게시판 글 삭제 메소드입니다
-	public void boardDelete();
+	public void boardDelete(Integer boardNum);
+	
+	//글 삭제시 번호들을 올려주는 업데이트 메소드입니다.
+	public void boardDelUpdateNum(Integer boardNum);
 	
 	//게시판 글 수정 메소드입니다.
 	public void boardUpdate();
@@ -26,5 +29,8 @@ public interface boardDaoImpl {
 	
 	//글 카운트(조회 수) 올리는 메소드입니다.
 	public void boardCount(Integer boardNum);
+	
+	//게시판 수정 처리 메소드입니다.
+	public void boardModify(Integer boardNum, String boardSubject, String boardContent);
 	
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.2//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="tq.spring.dao.impl.commentDaoImpl">
+	
+	<select id="commentList" resultType="tq.spring.dto.commentDto">
+		SELECT * FROM comment WHERE boardNum=#{param1}
+	</select>
+	
+	<delete id="commentDelete">
+		DELETE FROM comment WHERE boardNum=#{param1} and commentNum=#{param2}
+	</delete>
+
+	<update id="commentNumUp">
+		UPDATE comment SET commentNum=commentNum-1 WHERE boardNum=#{param1} and commentNum > #{param2}
+	</update>
+	
+	<insert id="commentInsert">
+		INSERT INTO comment(boardNum, commentNum, commentId, commentContent, commentDate) VALUES (#{param1}, #{param2}, #{param3}, #{param4}, NOW())
+	</insert>
+	
+	<select id="commentMax" resultType="java.lang.Integer">
+		SELECT count(*) FROM comment WHERE boardNum=#{param1}
+	</select>
+	
+	<select id="commentModifyView" resultType="tq.spring.dto.commentDto">
+		SELECT * FROM comment WHERE boardNum=#{param1} and commentNum=#{param2}
+	</select>
+	
+	<update id="commentModify">
+		UPDATE comment SET commentContent=#{param3} WHERE boardNum=#{param1} and commentNum=#{param2}
+	</update>
+	
+	<delete id="boardDel">
+		DELETE FROM comment WHERE boardNum=#{param1}
+	</delete>
+	
+	<update id="boardNumUp">
+		UPDATE comment SET boardNum=boardNum-1 WHERE boardNum>#{param1}
+	</update>
+	
+	
+</mapper>
