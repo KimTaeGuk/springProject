@@ -66,4 +66,16 @@ public class userDao implements userDaoImpl {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String userCheckId(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	} 
+	
+	@Override
+	public String userSearchId(String userName, String userBirth) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

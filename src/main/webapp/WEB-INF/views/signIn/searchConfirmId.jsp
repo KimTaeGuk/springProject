@@ -8,12 +8,14 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="replyModify" method="POST">
-	<input type="hidden" value="${replyModify.boardNum }" name="boardNum"/>
-	<input type="hidden" value="${replyModify.commentNum }" name="commentNum"/>
-	<input type="hidden" value="${replyModify.replyNum }" name="replyNum"/>
-	<textarea name="replyContent">${replyModify.replyContent }</textarea>
-	<input type="submit" value="전송"/>
-</form>
+<c:choose>
+	<c:when test="${null ne searchId }">
+		찾으시는 아이디는 ${searchId }입니당.
+	</c:when>
+	<c:otherwise>
+		아이디를 찾을 수 없습니다.
+	</c:otherwise>
+</c:choose>
+
 </body>
 </html>

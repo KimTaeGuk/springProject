@@ -33,4 +33,7 @@ public interface boardDaoImpl {
 	//게시판 수정 처리 메소드입니다.
 	public void boardModify(Integer boardNum, String boardSubject, String boardContent);
 	
+	//게시판 검색 매소드입니다.
+	public ArrayList<boardDto> boardSearch(String keyword);
+	
 }

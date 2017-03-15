@@ -9,10 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-게시판 페이지입니다.<br/>
-글 갯수 :${fn:length(boardList) }<br/>
-<c:out value="${userId }"/>님<br/>
-<a href="boardWrite">글쓰기</a>
+<h1>게시판 검색</h1>
 <table border="1">
 	<thead>
 		<tr>
@@ -26,8 +23,8 @@
 	</thead>
 	<tbody>
 		<c:choose>
-			<c:when test="${fn:length(boardList)!=0 }">
-				<c:forEach items="${boardList }" var="list">
+			<c:when test="${fn:length(boardSearch)!=0 }">
+				<c:forEach items="${boardSearch }" var="list">
 					<tr>
 							<td>${list.boardNum }</td>
 							<td>${list.boardId }</td>
@@ -39,7 +36,7 @@
 				</c:forEach>
 			</c:when>
 			<c:otherwise>
-				게시판에 글이 없습니다.
+				게시판에 검색 글이 없습니다.
 			</c:otherwise>
 		</c:choose>
 	</tbody>

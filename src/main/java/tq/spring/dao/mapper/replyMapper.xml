@@ -4,5 +4,48 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="tq.spring.dao.impl.replyDaoImpl">
-
+	
+	<select id="replyList" resultType="tq.spring.dto.replyDto">
+		SELECT * FROM reply WHERE boardNum=#{param1} and commentNum=#{param2}
+	</select>
+	
+	<select id="replyMax" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM reply WHERE boardNum=#{param1} and commentNum=#{param2}
+	</select>
+	
+	<insert id="replyInsert">
+		INSERT INTO reply(boardNum, commentNum, replyNum, replyId, replyContent, replyDate) VALUES(#{param1},#{param2},#{param3},#{param4},#{param5},NOW())	
+	</insert>
+	
+	<delete id="replyDelete">
+		DELETE FROM reply WHERE boardNum=#{param1} and commentNum=#{param2} and replyNum=#{param3}
+	</delete>
+	
+	<update id="replyNumUp">
+		UPDATE reply SET replyNum=replyNum-1 WHERE boardNum=#{param1} and commentNum=#{param2} and replyNum > #{param3}
+	</update>
+	
+	<select id="replyModifyView" resultType="tq.spring.dto.replyDto">
+		SELECT * FROM reply WHERE boardNum=#{param1} and commentNum=#{param2} and replyNum=#{param3}
+	</select>
+	
+	<update id="replyModifyProc">
+		UPDATE reply SET replyContent=#{param4} WHERE boardNum=#{param1} and commentNum=#{param2} and replyNum=#{param3}
+	</update>
+	
+	<delete id="commentDel">
+		DELETE FROM reply WHERE boardNum=#{param1} and commentNum=#{param2}
+	</delete>
+	
+	<update id="commentDelNumUp">
+		UPDATE reply SET commentNum=commentNum-1 WHERE boardNum=#{param1} and commentNum>#{param2} 
+	</update>
+	
+	<delete id="boardDel">
+		DELETE FROM reply WHERE boardNum=#{param1}
+	</delete>
+	
+	<update id="boardDelNumUp">
+		UPDATE reply SET boardNum=boardNum-1 WHERE boardNum>#{param1}
+	</update>
 </mapper>

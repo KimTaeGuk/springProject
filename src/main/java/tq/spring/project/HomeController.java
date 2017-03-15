@@ -21,6 +21,7 @@ import tq.spring.dao.userDao;
 import tq.spring.dao.userEmailSender;
 import tq.spring.dao.impl.boardDaoImpl;
 import tq.spring.dao.impl.commentDaoImpl;
+import tq.spring.dao.impl.replyDaoImpl;
 import tq.spring.dao.impl.userDaoImpl;
 import tq.spring.dto.userDto;
 import tq.spring.dto.userEmailDto;
@@ -49,6 +50,7 @@ public class HomeController {
 	private userDaoImpl userDaoImpl;
 	private boardDaoImpl boardDaoImpl;
 	private commentDaoImpl commentDaoImpl;
+	private replyDaoImpl replyDaoImpl;
 	
 	@RequestMapping(value = {"/", "/home", "/welcome"}, method = RequestMethod.GET)
 	public String home(Locale locale, Model model, HttpSession session) {
@@ -83,8 +85,9 @@ public class HomeController {
 	public String signUpProc(
 			@Param("userId") String userId,
 			@Param("userPassword") String userPassword,
-			@Param("userEmail") String userEmail,
+			@Param("userEmailId") String userEmailId,
 			@Param("userName") String userName,
+			@Param("userEmailAddress") String userEmailAddress,
 			HttpServletRequest request,
 			Model model){
 
@@ -92,6 +95,7 @@ public class HomeController {
 		BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 		String hashedPassword=passwordEncoder.encode(userPassword);	
 		
+		String userEmail=userEmailId+"@"+userEmailAddress;
 		String userBirth=request.getParameter("register_year")+"/"+request.getParameter("register_month")+"/"+request.getParameter("register_day");
 		
 		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
@@ -102,8 +106,13 @@ public class HomeController {
 	
 	//아이디 확인 페이지입니다.
 	@RequestMapping(value="/checkId", method=RequestMethod.GET)
-	public String checkId(HttpServletRequest request,Model model){
+	public String checkId(@RequestParam Map<String, Object> paramMap,Model model){
 
+		String userId=(String)paramMap.get("userId");
+		
+		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+		model.addAttribute("userCheckId",userDaoImpl.userCheckId(userId));
+		
 		return "signUp/checkId";
 	}
 	
@@ -208,6 +217,7 @@ public class HomeController {
 		
 		boardDaoImpl=sqlSession.getMapper(boardDaoImpl.class);
 		commentDaoImpl=sqlSession.getMapper(commentDaoImpl.class);
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
 		
 		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
 		
@@ -217,6 +227,9 @@ public class HomeController {
 		commentDaoImpl.boardDel(boardNum);
 		commentDaoImpl.boardNumUp(boardNum);
 	
+		replyDaoImpl.boardDel(boardNum);
+		replyDaoImpl.boardDelNumUp(boardNum);
+		
 		return "redirect:boardList";
 	}
 
@@ -263,8 +276,13 @@ public class HomeController {
 		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
 		
 		commentDaoImpl=sqlSession.getMapper(commentDaoImpl.class);
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
+		
 		commentDaoImpl.commentDelete(boardNum, commentNum);
 		commentDaoImpl.commentNumUp(boardNum, commentNum);
+		
+		replyDaoImpl.commentDel(boardNum, commentNum);
+		replyDaoImpl.commentDelNumUp(boardNum, commentNum);
 		
 		return "redirect:boardView?boardNum="+(String)paramMap.get("boardNum");
 	}
@@ -311,6 +329,111 @@ public class HomeController {
 		
 		return "redirect:boardView?boardNum="+(String)paramMap.get("boardNum");	
 	}
+
+	@RequestMapping(value="replyList", method=RequestMethod.GET)
+	public String replyList(@RequestParam Map<String, Object> paramMap, Model model){
+		
+		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
+		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
+		
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
+		
+		model.addAttribute("boardNum",boardNum);
+		model.addAttribute("commentNum",commentNum);
+		model.addAttribute("replyList",replyDaoImpl.replyList(boardNum, commentNum));
+		
+		return "board/reply/replyView";
+	}
+	
+	@RequestMapping(value="replyInsert", method=RequestMethod.POST)
+	public String replyInsert(@RequestParam Map<String, Object> paramMap, Model model){
+		
+		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
+		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
+		String replyId=(String)paramMap.get("replyId");
+		String replyContent=(String)paramMap.get("replyContent");
+		
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
+		Integer replyNum=replyDaoImpl.replyMax(boardNum, commentNum)+1;
+		replyDaoImpl.replyInsert(boardNum, commentNum, replyNum, replyId, replyContent);
+
+		return "redirect:boardView?boardNum="+(String)paramMap.get("boardNum");	
+	}
+	
+	@RequestMapping(value="replyDelete", method=RequestMethod.GET)
+	public String replyDelete(@RequestParam Map<String, Object> paramMap, Model model){
+		
+		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
+		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
+		Integer replyNum=Integer.parseInt((String)paramMap.get("replyNum"));
+		
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
+		replyDaoImpl.replyDelete(boardNum, commentNum, replyNum);
+		replyDaoImpl.replyNumUp(boardNum, commentNum, replyNum);
+		
+		return "redirect:boardView?boardNum="+(String)paramMap.get("boardNum");	
+	}
+	
+	@RequestMapping(value="replyModify", method=RequestMethod.GET)
+	public String replyModifyView(@RequestParam Map<String, Object> paramMap, Model model){
+		
+		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
+		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
+		Integer replyNum=Integer.parseInt((String)paramMap.get("replyNum"));
+		
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);
+		
+		model.addAttribute("replyModify",replyDaoImpl.replyModifyView(boardNum, commentNum, replyNum));
+		
+		return "board/reply/replyModify";
+	}
+	
+	@RequestMapping(value="replyModify", method=RequestMethod.POST)
+	public String replyModifyProc(@RequestParam Map<String, Object> paramMap){
+
+		Integer boardNum=Integer.parseInt((String)paramMap.get("boardNum"));
+		Integer commentNum=Integer.parseInt((String)paramMap.get("commentNum"));
+		Integer replyNum=Integer.parseInt((String)paramMap.get("replyNum"));		
+		String replyContent=(String)paramMap.get("replyContent");
+		
+		replyDaoImpl=sqlSession.getMapper(replyDaoImpl.class);		
+		replyDaoImpl.replyModifyProc(boardNum, commentNum, replyNum, replyContent);
+		
+		return "redirect:boardView?boardNum="+(String)paramMap.get("boardNum");	
+	}
+	
+	@RequestMapping(value="boardSearch", method=RequestMethod.GET)
+	public String boardSearch(@Param("keyword") String keyword, Model model){
+		
+		boardDaoImpl=sqlSession.getMapper(boardDaoImpl.class);
+		
+		model.addAttribute("boardSearch", boardDaoImpl.boardSearch(keyword));
+		
+		return "board/boardSearch";
+	}
+	
+	@RequestMapping(value="searchId", method=RequestMethod.GET)
+	public String searchIdView(){
+		return "signIn/searchId";
+	}
+	
+	@RequestMapping(value="searchId", method=RequestMethod.POST)
+	public String searchIdProc(HttpServletRequest request, Model model){
+		
+		String userName=request.getParameter("userName");
+		String userBirth=request.getParameter("register_year")+"/"+request.getParameter("register_month")+"/"+request.getParameter("register_day");
+		
+		System.out.println(userName);
+		System.out.println(userBirth);
+		
+		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+		model.addAttribute("searchId", userDaoImpl.userSearchId(userName, userBirth));
+		
+		System.out.println(userDaoImpl.userSearchId(userName, userBirth));
+		
+		return "signIn/searchConfirmId";
+	}
+	
 	
 }
 

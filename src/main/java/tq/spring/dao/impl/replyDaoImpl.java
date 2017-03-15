@@ -9,6 +9,9 @@ public interface replyDaoImpl {
 	//리플 삽입
 	public ArrayList<replyDto> replyList(Integer boardNum, Integer commentNum);
 	
+	//리픗 갯수
+	public Integer replyMax(Integer boardNum, Integer commentNum);
+	
 	//리플 수정 
 	public void replyInsert(Integer boardNum, Integer commentNum, Integer replyNum, String replyId, String replyContent);
 
@@ -17,6 +20,13 @@ public interface replyDaoImpl {
 	
 	//리플 삭제 시 번호 올리기
 	public void replyNumUp(Integer boardNum, Integer commentNum, Integer replyNum);
+	
+	//////////////////////////////
+	//댓글 수정 내용 가져오기
+	public replyDto replyModifyView(Integer boardNum, Integer commentNum, Integer replyNum);
+	//댓글 수정 내용 보내기
+	public void replyModifyProc(Integer boardNum, Integer commentNum, Integer replyNum, String replyContent);
+	//////////////////////////////
 	
 	
 	/////////////////////////////

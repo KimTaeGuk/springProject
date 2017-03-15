@@ -20,7 +20,8 @@
 				option.text=day;
 				option.value=day;
 				x.add(option);
-			}		
+			}
+			
 		});
 		
 		//비밀번호 대조기능입니다.
@@ -102,15 +103,65 @@
 				break;
 		}
 	}
+	
+	function SignUpSubmit(fm){
+		var passwordRules = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,16}$/;
+		if(!$("#userId").val()){	
+			alert("ID를 입력하세요.");
+			$("#userId").focus();
+			return false;
+		}
+		if($("#existsId").val()=="false"){
+				alert("ID가 중복되어있습니다. ID를 바꿔주세요.");
+				$("#userId").focus();
+				return false;
+		}	else if($("#existsId").val()=="true"){
+			
+		}	else{
+				alert("id확인버튼을 눌러주세요");
+				$("#id_check").focus();
+				return false;
+		}
+		if(!eq_pw){
+			alert("비밀번호가 서로 맞지 않습니다. 확인해주세요.");
+			$("#userPasswordConfirm").focus();
+			return false;
+		}
+		if(!passwordRules.test($("#userPassword").val())){
+			alert("비밀번호는 8~16글자로 작성하셔야합니다. \n 또한, 특수문자(\!,\@,\#,\$,\%,\^,\*,\+,\=,\-)와 영문 및 숫자가 최소 하나씩은 포함 되어야합니다.");
+			$("#userPassword").focus();
+			return false;
+		}
+		
+		if(!$("#userEmailId").val()){
+			alert("이메일을 입력해주세요");
+			$("#userEmailId").focus();
+			return false;
+		}
+		//공백, 숫자, 한글은 작성이 불가능합니다.
+		if(!/^[a-z]{3,16}$/.test($("#userName").val())){
+			alert("이름은 3~15자로, 공백, 숫자 그리고 특수문자를 대입할 수 없습니다.");
+			$("#name").focus();
+			return false;
+		}
+			
+		fm.submit();
+	}
+	
+	//아이디를 바꿨을 시 ID확인에 null 값을 주어 회원가입 제출 시 다시 ID확인을 하도록 합니다.
+	function changeId(userId){
+		$("#existsId").val(null);
+	}
 	</script>
 </head>
 <body>
 <h2>판매자 회원가입</h2>
-<form action="signUpProc" method="POST">
+<form action="signUpProc" method="POST" id="fm" enctype="multipart/form-data">
+	<input type="hidden" id="existsId"/>
 	<table border="1">
 		<tr>
 			<td>아이디</td>
-			<td><input type="text" name="userId"  id="userId"/></td>
+			<td><input type="text" name="userId"  id="userId" onchange="javascript:changeId(this.value);"/></td>
 			<td><input type="button" id="id_check" value="ID확인" onclick="javascript:chkId(this.form);"/></td>
 		</tr>
 		<tr>
@@ -124,11 +175,22 @@
 		</tr>
 		<tr>
 			<td>이메일</td>
-			<td><input type="text" name="userEmail" /></td>
+			<td>
+				<div id="emailDiv">
+					<input type="text" id="userEmailId" name="userEmailId" size="4"/>
+					@
+					<select name="userEmailAddress" id="userEmailAddress">
+						<option value="gmail.com">gmail.com</option>
+						<option value="naver.com">naver.com</option>
+						<option value="daum.net">daum.net</option>
+						<option value="self">직접입력</option>
+					</select>
+				</div>
+			</td>
 		</tr>
 		<tr>
 			<td>이름</td>
-			<td><input type="text" name="userName" /></td>
+			<td><input type="text" id="userName" name="userName" /></td>
 		</tr>
 		<tr>
 			<td>생년월일</td>
@@ -160,7 +222,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" value="전송" /></td>
+			<td>이미지</td>
+			<td><input type="file" name="userImg"/></td>
+		</tr>
+		<tr>
+			<td colspan="2"><input type="button" onclick="SignUpSubmit(this.form);" value="제출"/></td>
 		</tr>
 	</table>
 	<!-- csrf -->

@@ -6,7 +6,7 @@
  <mapper namespace="tq.spring.dao.impl.userDaoImpl">
  	<!-- 회원가입 -->
  	<insert id="userInsert">
-		INSERT INTO user(userId, userPassword, userEmail, userName, userBirth, enabled) values(#{param1}, #{param2}, #{param3}, #{param4}, #{param5}, true)
+		INSERT INTO user(userId, userPassword, userEmail, userName, userBirth, enabled, userImg) values(#{param1}, #{param2}, #{param3}, #{param4}, #{param5}, true)
 	</insert>
 	
 	<select id="userEmailSearch" resultType="java.lang.String">
@@ -16,4 +16,13 @@
 	<update id="userpasswordUpdate">
 		UPDATE user SET userPassword=#{param3} where userId=#{param1} and userName=#{param2}
 	</update>
+	
+	<select id="userCheckId" resultType="java.lang.String">
+		SELECT * FROM user WHERE userId=#{param1}
+	</select>
+	
+	<select id="userSearchId" resultType="java.lang.String">
+		SELECT userId FROM user WHERE userName=#{param1} and userBirth=#{param2}
+	</select>
+ 
  </mapper>

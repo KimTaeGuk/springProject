@@ -56,4 +56,10 @@ public class boardDao implements boardDaoImpl {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public ArrayList<boardDto> boardSearch(String keyword) {
+		// TODO Auto-generated method stub
+		return null;
+	} 
 }

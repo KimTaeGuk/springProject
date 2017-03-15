@@ -37,4 +37,8 @@
 		UPDATE board SET boardSubject=#{param2}, boardContent=#{param3} where boardNum=#{param1}
 	</update>
 
+	<select id="boardSearch" resultType="tq.spring.dto.boardDto">
+		SELECT * FROM board where boardId LIKE concat('%',#{param1},'%') or boardSubject LIKE concat('%',#{param1},'%') or boardContent LIKE concat('%',#{param1},'%')
+	</select>
+
 </mapper>

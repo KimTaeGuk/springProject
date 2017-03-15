@@ -19,4 +19,10 @@ public interface userDaoImpl {
 	
 	//이메일을 꺼내오는 메소드입니다.
 	public String userEmailSearch(String userId, String userName);
+	
+	//아이디 중복처리 메소드입니다.
+	public String userCheckId(String userId);
+	
+	//아이디 찾기 메소드입니다.
+	public String userSearchId(String userName, String userBirth);
 }
