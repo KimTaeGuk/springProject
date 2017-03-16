@@ -70,18 +70,12 @@ public class HomeController {
 		String userId=(String)session.getAttribute("userId");
 		
 		if(authentication.getName().equals("anonymousUser")){
-				System.out.println("익명");
 		}	else {
 				session.setAttribute("userId",authentication.getName());
-				System.out.println((String)session.getAttribute("userId"));
 		}
-		
-		//이미지 찾는 것입니다.
+			
 		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
-		String userImg=userDaoImpl.userImgView(userId);
-		
-		model.addAttribute("userImg",userImg);
-		System.out.println(userImg);
+		model.addAttribute("userDto", userDaoImpl.userModifyView(userId));
 		
 		return "home";
 	}
