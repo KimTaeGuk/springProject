@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import tq.spring.dao.impl.userDaoImpl;
+import tq.spring.dto.userDto;
+
 import java.util.Random;
 
 @Repository
@@ -27,10 +29,16 @@ public class userDao implements userDaoImpl {
 	}
 
 	@Override
-	public void userModify(String userId) {
+	public void userModify(String userId, String userEmail, String userImg) {
 		// TODO Auto-generated method stub
+		
+	} 
 
-	}
+	@Override
+	public userDto userModifyView(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	} 
 
 	@Override
 	public void userDelete(String userId) {
@@ -78,4 +86,23 @@ public class userDao implements userDaoImpl {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public void userImgUpload(String userId, String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public String userImgView(String userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public void userImgModify(String fileName) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

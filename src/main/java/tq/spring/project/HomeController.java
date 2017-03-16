@@ -1,5 +1,11 @@
 package tq.spring.project;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
@@ -7,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
+import org.junit.runner.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +22,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import tq.spring.dao.userDao;
@@ -58,6 +67,8 @@ public class HomeController {
 					
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+		String userId=(String)session.getAttribute("userId");
+		
 		if(authentication.getName().equals("anonymousUser")){
 				System.out.println("익명");
 		}	else {
@@ -65,8 +76,101 @@ public class HomeController {
 				System.out.println((String)session.getAttribute("userId"));
 		}
 		
+		//이미지 찾는 것입니다.
+		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+		String userImg=userDaoImpl.userImgView(userId);
+		
+		model.addAttribute("userImg",userImg);
+		System.out.println(userImg);
 		
 		return "home";
+	}
+	
+	@RequestMapping(value="userModify", method=RequestMethod.GET)
+	public String userModifyView(
+			@RequestParam Map<String, Object> paramMap, 
+			HttpSession session,
+			Model model){
+		
+		String userId=(String)session.getAttribute("userId");
+		
+		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+		
+		model.addAttribute("userDto", userDaoImpl.userModifyView(userId));
+		
+		return "signIn/userModify";
+	}
+	
+	//회원 정보 수정 컨트롤러입니다.
+	@RequestMapping(value="userModify", method=RequestMethod.POST)
+	public String userModifyProc(){
+		
+		return "home";
+	}
+	
+	//회원 이미지 수정 컨트롤러입니다.
+	@RequestMapping(value="userImgModify", method=RequestMethod.GET)
+	public String userImgModifyView(HttpSession session, Model model){
+
+		String userId=(String)session.getAttribute("userId");
+		
+		userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+		
+		model.addAttribute("userDto", userDaoImpl.userModifyView(userId));
+		return "signIn/userImgModify";
+	}
+	
+	@RequestMapping(value="userImgModify", method=RequestMethod.POST)
+	public @ResponseBody String userImgModifyProc(
+			HttpSession session,
+			@Param("userImg") String userImg,
+			@RequestParam("file") MultipartFile file){
+		
+		//파일 경로입니다.
+		String rootPath="C:\\Users\\itwill\\Desktop\\springProject\\src\\main\\webapp\\resources\\images\\userImg\\";
+
+		//먼저 기존 이미지를 삭제해줍니다.
+		
+		System.out.println(userImg);
+		File oldFile=new File(rootPath+userImg);
+		if(oldFile.isFile()) {oldFile.delete();}
+		
+		Calendar calendar=Calendar.getInstance();
+		Date date=calendar.getTime();
+		String today=(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+		
+		String userId=(String)session.getAttribute("userId");
+		
+		File dir=new File(rootPath+File.separator);
+
+		if(!dir.exists()) dir.mkdirs();
+		
+		if(!file.isEmpty()){
+			try{
+				byte[] bytes=file.getBytes();
+				
+				String fileName=today+userId+file.getOriginalFilename();
+				
+				File serverFile=new File(dir.getAbsolutePath()+File.separator+fileName);
+				BufferedOutputStream stream=new BufferedOutputStream(new FileOutputStream(serverFile));
+				stream.write(bytes);
+				stream.close();
+					
+				//이미지 이름 DB에 넣어주기
+				userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+				userDaoImpl.userImgUpload(userId, fileName);
+				
+				return "You successfully upload file";
+			}catch(Exception e){
+				return "You failed to upload "+file.getOriginalFilename()+ " => "+ e.getMessage();
+			}
+		}	else {
+			
+			//파일이 존재하지 않을 때 입니다.
+			userDaoImpl.userImgUpload(userId, null);
+			
+			return "You failed to Upload, because the file was empty";
+		}
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +206,59 @@ public class HomeController {
 		userDaoImpl.userInsert(userId, hashedPassword, userEmail, userName, userBirth);
 		
 		return "home";
+	}
+	
+	//회원 이미지 설정 이동입니다.
+	@RequestMapping(value="/UserImgUpload", method=RequestMethod.GET)
+	public String UserImgUploadView(){
+		return "signIn/UserImgUpload";
+	}
+	
+	//회원가입 이미지 처리입니다.
+	@RequestMapping(value="/UserImgUpload", method=RequestMethod.POST)
+	public @ResponseBody String UserImgUploadProc(
+			HttpSession session,
+			@RequestParam("file") MultipartFile file){
+
+		Calendar calendar=Calendar.getInstance();
+		Date date=calendar.getTime();
+		String today=(new SimpleDateFormat("yyyyMMddHHmmss").format(date));
+
+		String userId=(String)session.getAttribute("userId");
+		
+		//파일 경로입니다.
+		String rootPath="C:\\Users\\itwill\\Desktop\\springProject\\src\\main\\webapp\\resources\\images\\userImg\\";
+		File dir=new File(rootPath+File.separator);
+
+		if(!dir.exists()) dir.mkdirs();
+		
+			
+		if(!file.isEmpty()){
+			try{
+				byte[] bytes=file.getBytes();
+				
+				String fileName=today+userId+file.getOriginalFilename();
+				
+				File serverFile=new File(dir.getAbsolutePath()+File.separator+fileName);
+				BufferedOutputStream stream=new BufferedOutputStream(new FileOutputStream(serverFile));
+				stream.write(bytes);
+				stream.close();
+					
+				//이미지 이름 DB에 넣어주기
+				userDaoImpl=sqlSession.getMapper(userDaoImpl.class);
+				userDaoImpl.userImgUpload(userId, fileName);
+				
+				return "You successfully upload file";
+			}catch(Exception e){
+				return "You failed to upload "+file.getOriginalFilename()+ " => "+ e.getMessage();
+			}
+		}	else {
+			
+			//파일이 존재하지 않을 때 입니다.
+			userDaoImpl.userImgUpload(userId, null);
+			
+			return "You failed to Upload, because the file was empty";
+		}
 	}
 	
 	//아이디 확인 페이지입니다.
@@ -433,7 +590,4 @@ public class HomeController {
 		
 		return "signIn/searchConfirmId";
 	}
-	
-	
 }
-

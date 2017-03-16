@@ -9,6 +9,11 @@
 		INSERT INTO user(userId, userPassword, userEmail, userName, userBirth, enabled, userImg) values(#{param1}, #{param2}, #{param3}, #{param4}, #{param5}, true)
 	</insert>
 	
+	<select id="userModifyView" resultType="tq.spring.dto.userDto">
+		SELECT * FROM user WHERE userId=#{param1}
+	</select>
+	
+	
 	<select id="userEmailSearch" resultType="java.lang.String">
 		SELECT userEmail FROM user WHERE userId=#{param1} and userName=#{param2}
 	</select>
@@ -24,5 +29,22 @@
 	<select id="userSearchId" resultType="java.lang.String">
 		SELECT userId FROM user WHERE userName=#{param1} and userBirth=#{param2}
 	</select>
+	
+	<update id="userImgUpload">
+		<choose>
+			<!-- fileName 값이 있을 경우의 sql명령문입니다. -->
+			<when test="param2 !=null">
+				UPDATE user SET userImg=#{param2} WHERE userId=#{param1}
+			</when>
+			<!-- fileName 값이 없을 경우의 sql명령문입니다. -->
+			<otherwise>
+				UPDATE user SET userImg=BasicMaleImg.png WHERE userId=#{param1}
+			</otherwise>
+		</choose>
+	</update>
+ 
+ 	<select id="userImgView" resultType="java.lang.String">
+ 		SELECT userImg FROM user WHERE userId=#{param1}
+ 	</select>
  
  </mapper>

@@ -155,7 +155,7 @@
 	</script>
 </head>
 <body>
-<h2>판매자 회원가입</h2>
+<h2>회원가입</h2>
 <form action="signUpProc" method="POST" id="fm" enctype="multipart/form-data">
 	<input type="hidden" id="existsId"/>
 	<table border="1">
@@ -220,10 +220,6 @@
 
 				</select>일
 			</td>
-		</tr>
-		<tr>
-			<td>이미지</td>
-			<td><input type="file" name="userImg"/></td>
 		</tr>
 		<tr>
 			<td colspan="2"><input type="button" onclick="SignUpSubmit(this.form);" value="제출"/></td>

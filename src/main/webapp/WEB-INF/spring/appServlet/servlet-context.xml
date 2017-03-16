@@ -40,6 +40,8 @@
 		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
 	</beans:bean> 
 	
+
+	
 	
 	<!-- 이메일 보내기 -->
 	<beans:bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
@@ -59,5 +61,10 @@
 	
 	<beans:bean id="email" class="tq.spring.dto.userEmailDto"/>
 	<beans:bean id="emailSender" class="tq.spring.dao.userEmailSender"/>	
+	
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="1024000000" />
+	</beans:bean>
+	
 	
 </beans:beans>

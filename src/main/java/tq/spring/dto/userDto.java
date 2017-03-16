@@ -6,7 +6,14 @@ public class userDto {
 	private String userEmail;
 	private String userName;
 	private String userBirth;
+	private String userImg;
 	
+	public String getUserImg() {
+		return userImg;
+	}
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
+	}
 	public String getUserId() {
 		return userId;
 	}
